@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '6.0.54'
+    id 'org.spongepowered.mixin' version '0.7.38'
+}
+
+group = 'com.bettercontent'
+version = project.property('mod_version')
+base { archivesName = 'better-seasonal-daylight' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    copyIdeResources = true
+    runs {
+        configureEach {
+            property 'forge.logging.console.level', 'info'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            mods { better_seasonal_daylight { source sourceSets.main } }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.minecraftforge.net' }
+    maven { url = 'https://cursemaven.com'; content { includeGroup 'curse.maven' } }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.22'
+    implementation fg.deobf('curse.maven:serene-seasons-291874:6398227')
+    implementation fg.deobf('curse.maven:glitchcore-955399:5787839')
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+mixin {
+    add sourceSets.main, 'better_seasonal_daylight.refmap.json'
+    config 'better_seasonal_daylight.mixins.json'
+}
+
+tasks.withType(JavaCompile).configureEach { options.release = 17 }
+test {
+    useJUnitPlatform()
+    jvmArgs '-Djava.io.tmpdir=/home/dev/.tmp'
+    testLogging { events 'passed', 'skipped', 'failed' }
+    afterSuite { desc, result ->
+        if (!desc.parent && (result.testCount == 0 || result.skippedTestCount > 0))
+            throw new GradleException('Unit tests must execute and cannot skip')
+    }
+}
+
+// The annotation processor emits the refmap in compileJava; make it available to
+// both the development resource classpath and the distributable JAR.
+tasks.register('prepareMixinResources', Copy) {
+    dependsOn 'compileJava'
+    from layout.buildDirectory.file('tmp/compileJava/compileJava-refmap.json')
+    into layout.buildDirectory.dir('generated/mixinResources')
+    rename { 'better_seasonal_daylight.refmap.json' }
+}
+sourceSets.main.resources.srcDir layout.buildDirectory.dir('generated/mixinResources')
+tasks.named('processResources') { dependsOn 'prepareMixinResources' }
+jar {
+    filesMatching('better_seasonal_daylight.refmap.json') { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+    manifest {
+        attributes('Implementation-Version': project.version,
+                   'MixinConfigs': 'better_seasonal_daylight.mixins.json')
+    }
+    finalizedBy 'reobfJar'
+}

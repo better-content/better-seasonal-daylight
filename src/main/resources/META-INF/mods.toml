@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+[[mods]]
+modId="better_seasonal_daylight"
+version="${file.jarVersion}"
+displayName="Better Seasonal Daylight"
+description='''A Serene Seasons-driven sky clock with a fixed full-day duration and seasonally changing daylight share. Requires removal of Simple Day Length Extender before activation.'''
+[[dependencies.better_seasonal_daylight]]
+modId="forge"
+mandatory=true
+versionRange="[47.4.22,48)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.better_seasonal_daylight]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.better_seasonal_daylight]]
+modId="sereneseasons"
+mandatory=true
+versionRange="[9.1.0.2]"
+ordering="AFTER"
+side="BOTH"

@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.bettercontent.seasonaldaylight",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "better_seasonal_daylight.refmap.json",
+  "mixins": ["mixin.ServerDayTimeMixin"],
+  "client": ["client.ClientDayTimeMixin", "client.ClientTimePacketMixin"],
+  "injectors": {"defaultRequire": 1}
+}

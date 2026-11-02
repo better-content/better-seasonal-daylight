@@ -1,0 +1,17 @@
+# Better Seasonal Daylight (source-only replacement)
+
+Forge 1.20.1 / 47.4.22, Java 17, Serene Seasons 9.1.0.2. This standalone mod is being implemented as a **replacement**, not an addition, for Simple Day Length Extender. It has not been deployed into the modpack; the existing extender and its settings remain in place and operational. No gameplay, loader, server/client or world verification is claimed.
+
+## Intended sky clock
+
+A full sunrise-to-sunrise Overworld cycle remains **50,000 simulation ticks** (41m40s at 20 TPS). Its daylight share changes smoothly over Serene Seasons' actual northern annual phase: equinox 50% (20m50s day / 20m50s night), summer solstice 70% (29m10s / 12m30s), winter solstice 30% (12m30s / 29m10s). The opposite half adjusts so total cycle duration stays fixed. Day/night durations include twilight by game-clock phase, not astronomical observation. This is a global sky clock, not a biome/latitude simulation. Server-authoritative sky/dayTime only: gameTime, TPS, entities, machines and ordinary simulation are unchanged. Serene Seasons `day_duration` stays at 24,000 logical dayTime ticks; do **not** change it to 50,000. Seasonal trees and the calendar use the same Serene Seasons timeline.
+
+`config/better_seasonal_daylight-common.toml` exposes cycleTicks, equinoxDayFraction and annualAmplitude. **Known limitation:** a reliable brand-new-world marker is unavailable for an existing pack world without this mod's prior SavedData; even a world at gameTime/dayTime zero might be an existing world. Consequently there is no first-player auto-pause: it could unexpectedly freeze an existing world. The clock continues on empty servers and respects deliberate `doDaylightCycle=false`; Serene Seasons' independent `progress_when_offline` setting still governs its calendar. Fixed-time and non-Overworld dimensions are not targeted. Serene Seasons is a required dependency (fail visibly if absent). An installed `simpledaylengthextender` is explicitly rejected instead of stacking two clocks.
+
+## Future pack replacement (NOT PERFORMED)
+
+After the new artifact is ready **and installation is explicitly authorized**, replace atomically: remove `/home/dev/better-content-modpack/mods/simpledaylengthextender.pw.toml` (old pack filename `SimpleDayLengthExtender-1.2.1-Forge-1.20.1.jar`) from the selected pack build and activate the Better Seasonal Daylight artifact/manifest in the same change. The existing `/home/dev/better-content-modpack/config/simpledaylengthextender-common.toml` (day×3, night×1, boundary 13000) must remain rollback data unless the operator explicitly requests removal. Do not disable or remove the existing extender while the replacement is source-only; do not activate both. Do not edit existing world time, Serene Seasons season state, SS `day_duration`, or player saves. Independently verify any eventual artifact identity, compatibility, client sync and runtime behavior in a separately authorized testing phase.
+
+## Allowed source checks
+
+Existing cached ForgeGradle toolchain, offline, max two workers; only explicit compile/assembly and isolated JUnit tests under `/home/dev/.tmp/better-content-gradle.lock`. Workers do not run Gradle. `./gradlew --offline --no-daemon --max-workers=2 compileJava test` is a source/unit check, **not** gameplay or loader verification. Never invoke game, integration, GameTest, native or visual tasks in this implementation batch.
