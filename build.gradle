@@ -70,3 +70,12 @@ jar {
     }
     finalizedBy 'reobfJar'
 }
+
+// Stage the production reobfuscated archive only; this does not install or launch it.
+tasks.register('stageRuntimeJar', Copy) {
+    dependsOn 'reobfJar'
+    from layout.buildDirectory.file('reobfJar/output.jar')
+    into layout.buildDirectory.dir('libs')
+    rename { "better-seasonal-daylight-${project.version}.jar" }
+}
+assemble.dependsOn 'stageRuntimeJar'
