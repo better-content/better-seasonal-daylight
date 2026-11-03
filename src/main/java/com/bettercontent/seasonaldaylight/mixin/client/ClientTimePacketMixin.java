@@ -1,5 +1,6 @@
-package com.bettercontent.seasonaldaylight.client;
+package com.bettercontent.seasonaldaylight.mixin.client;
 
+import com.bettercontent.seasonaldaylight.client.ClientClock;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import org.spongepowered.asm.mixin.Mixin;
