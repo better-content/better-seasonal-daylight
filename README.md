@@ -1,6 +1,10 @@
-# Better Seasonal Daylight (source-only replacement)
+# Better Seasonal Daylight
 
-Forge 1.20.1 / 47.4.22, Java 17, Serene Seasons 9.1.0.2. This standalone mod is being implemented as a **replacement**, not an addition, for Simple Day Length Extender. It has not been deployed into the modpack; the existing extender and its settings remain in place and operational. No gameplay, loader, server/client or world verification is claimed.
+Forge 1.20.1 / 47.4.22, Java 17, Serene Seasons 9.1.0.2. This standalone mod replaces Simple Day Length Extender, never runs alongside it. The 2026-11-02 source-only batch did not deploy it or verify gameplay, loader, client/server or world behavior.
+
+## Current consolidation scope (2026-11-03)
+
+The later Better Content consolidation authorization selects a fresh rebuild and atomic fresh-world experimental pack activation in place of the old clock owner. Local candidate commits, existing source/unit checks and exact-artifact pack Smoke are authorized under coordinator control; gate-controlled source publication requires every applicable gate. This does not waive a publication check, qualify runtime behavior or permit upload of restricted pack binaries. The prior implementation-only/no-commit/no-push limits below describe the earlier batch. Existing worlds, saved calendars and rollback configuration remain protected; no old-world repair/reset, owner-native seasonal-cycle campaign or visual acceptance is claimed.
 
 ## Intended sky clock
 
@@ -8,10 +12,10 @@ A full sunrise-to-sunrise Overworld cycle remains **50,000 simulation ticks** (4
 
 `config/better_seasonal_daylight-common.toml` exposes cycleTicks, equinoxDayFraction and annualAmplitude. **Known limitation:** a reliable brand-new-world marker is unavailable for an existing pack world without this mod's prior SavedData; even a world at gameTime/dayTime zero might be an existing world. Consequently there is no first-player auto-pause: it could unexpectedly freeze an existing world. The clock continues on empty servers and respects deliberate `doDaylightCycle=false`; Serene Seasons' independent `progress_when_offline` setting still governs its calendar. Fixed-time and non-Overworld dimensions are not targeted. Serene Seasons is a required dependency (fail visibly if absent). An installed `simpledaylengthextender` is explicitly rejected instead of stacking two clocks.
 
-## Future pack replacement (NOT PERFORMED)
+## Historical source-only replacement plan
 
-After the new artifact is ready **and installation is explicitly authorized**, replace atomically: remove `/home/dev/better-content-modpack/mods/simpledaylengthextender.pw.toml` (old pack filename `SimpleDayLengthExtender-1.2.1-Forge-1.20.1.jar`) from the selected pack build and activate the Better Seasonal Daylight artifact/manifest in the same change. The existing `/home/dev/better-content-modpack/config/simpledaylengthextender-common.toml` (day×3, night×1, boundary 13000) must remain rollback data unless the operator explicitly requests removal. Do not disable or remove the existing extender while the replacement is source-only; do not activate both. Do not edit existing world time, Serene Seasons season state, SS `day_duration`, or player saves. Independently verify any eventual artifact identity, compatibility, client sync and runtime behavior in a separately authorized testing phase.
+The earlier source batch deferred installation. The later consolidation selects atomic replacement in the isolated candidate: remove the Simple Day Length Extender manifest from that candidate and activate the Better Seasonal Daylight artifact/manifest in the same change. Preserve the existing `config/simpledaylengthextender-common.toml` (day×3, night×1, boundary 13000) as rollback data unless explicitly directed otherwise; never activate both clocks. Do not edit existing world time, Serene Seasons season state, SS `day_duration`, or player saves. Fresh artifact identity and exact-artifact Smoke remain required; neither establishes native seasonal-cycle qualification.
 
-## Allowed source checks
+## Historical source-batch checks
 
-Existing cached ForgeGradle toolchain, offline, max two workers; only explicit compile/assembly and isolated JUnit tests under `/home/dev/.tmp/better-content-gradle.lock`. Workers do not run Gradle. `./gradlew --offline --no-daemon --max-workers=2 compileJava test` is a source/unit check, **not** gameplay or loader verification. Never invoke game, integration, GameTest, native or visual tasks in this implementation batch.
+The earlier batch used the cached ForgeGradle toolchain, offline, max two workers, and explicit compile/assembly plus isolated JUnit tests under `/home/dev/.tmp/better-content-gradle.lock`. `./gradlew --offline --no-daemon --max-workers=2 compileJava test` is a source/unit check, **not** gameplay or loader verification. The later consolidation adds only the authorized exact-artifact pack Smoke; owner-native, seasonal-cycle and visual campaigns remain outside its scope.

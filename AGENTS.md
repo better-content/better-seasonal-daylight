@@ -1,6 +1,12 @@
-# Better Seasonal Daylight — source-only development contract
+# Better Seasonal Daylight — source contract and consolidation scope
 
-Standalone Forge 1.20.1 / 47.4.22, Java 17 addon replacing Simple Day Length Extender; Serene Seasons 9.1.0.2 mandatory. See README.md for the intended fixed-total seasonal clock and deferred atomic pack replacement. Current authorization: implementation and **isolated unit tests only**, with necessary compilation/assembly. No game/loader launch, Forge GameTests, integration, native/world/client/server/visual testing, distribution, modpack edits, player saves, deployment, commits or push. Do not remove old Simple Day Length Extender until a replacement artifact exists and activation is separately authorized. Do not change Serene Seasons configuration or another project's code.
+## Current consolidation scope (2026-11-03)
+
+The later, explicit Better Content consolidation authorization in `/home/dev/consolidation-work/20261102T210323Z/EXECUTION.md` supersedes this repository's older implementation-only/no-commit/no-push batch limits for that operation. It selects a fresh source rebuild, local candidate commits, atomic experimental pack activation in place of Simple Day Length Extender, and existing source/unit checks plus exact-artifact pack Smoke. Gate-controlled source publication may follow only after every applicable publication gate passes; this is no gate waiver or permission to upload restricted pack binaries. The coordinator owns builds, runtime, commits and publication. No result is qualified or published merely by this scope change. Existing worlds and calendars remain untouched; no repair/reset, owner-native seasonal-cycle campaign, Soak, Tele Soak or visual acceptance is authorized.
+
+## Historical source batch (2026-11-02)
+
+Standalone Forge 1.20.1 / 47.4.22, Java 17 addon replacing Simple Day Length Extender; Serene Seasons 9.1.0.2 mandatory. The earlier batch authorized implementation and **isolated unit tests only**, with necessary compilation/assembly. Its no-game/no-loader/no-pack/no-commit/no-push limits applied to that batch; the later consolidation scope above controls the selected candidate work. Do not change Serene Seasons' logical calendar or another project's code.
 
 Ownership: /daylight-coordinator owns root scaffold, entrypoint, config, resources and docs; /daylight-runtime owns `src/main/java/com/bettercontent/seasonaldaylight/{clock,runtime,mixin,network,client}/**`; /daylight-tests owns `src/test/**`. Only coordinator runs isolated JUnit/compile under shared `/home/dev/.tmp/better-content-gradle.lock`, fail fast, `--offline --no-daemon --max-workers=2`, coordinate with seasonal-trees owner. Consult live Herdr agent state and `$HOME/.local/share/worklane/agent-work/*.md` before edits.
 
