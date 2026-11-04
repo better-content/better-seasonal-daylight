@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.4.22'
-    implementation fg.deobf('curse.maven:serene-seasons-291874:6398227')
+    implementation fg.deobf('curse.maven:serene-seasons-291874:8246702')
     implementation fg.deobf('curse.maven:glitchcore-955399:5787839')
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
