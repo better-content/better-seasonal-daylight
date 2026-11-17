@@ -41,11 +41,11 @@ public final class ClientClock {
         }
     }
 
-    public static long adjust(ClientLevel level, long vanillaNext) {
+    public static long adjust(ClientLevel level, long current, long vanillaNext) {
         if (level.dimension() != Level.OVERWORLD) return vanillaNext;
         forLevel(level);
-        if (clock == null || vanillaNext != level.getDayTime() + 1) return vanillaNext;
-        return clock.advance(level.getDayTime(), true, clock.dayTicks());
+        if (clock == null || vanillaNext != current + 1) return vanillaNext;
+        return clock.advance(current, true, clock.dayTicks());
     }
 
     /** Ignore only tiny *ordinary* vanilla packet rewinds; commands and large jumps pass. */
