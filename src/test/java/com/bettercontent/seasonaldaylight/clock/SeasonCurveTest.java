@@ -7,20 +7,21 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Pure annual sunlight policy; does not load Forge, a world or Serene Seasons. */
 class SeasonCurveTest {
     private static final int CYCLE = 50_000;
-    private static final double EQUINOX = .5;
-    private static final double SWING = .2;
+    private static final double EQUINOX = .65;
+    private static final double SWING = EQUINOX - SeasonCurve.MIN_DAY_FRACTION;
 
     @Test
     void trueSereneSeasonsMidpointAnchors() {
         // SeasonTime sub-season order: early/mid/late spring, summer, autumn, winter.
         // The anchor lies at the CENTER of each middle sub-season, not its first day.
-        assertEquals(.5, SeasonCurve.dayFraction(.125, EQUINOX, SWING), 1e-12);
-        assertEquals(.7, SeasonCurve.dayFraction(.375, EQUINOX, SWING), 1e-12);
-        assertEquals(.5, SeasonCurve.dayFraction(.625, EQUINOX, SWING), 1e-12);
-        assertEquals(.3, SeasonCurve.dayFraction(.875, EQUINOX, SWING), 1e-12);
-        assertEquals(25_000, SeasonCurve.dayTicks(CYCLE, .125, EQUINOX, SWING));
-        assertEquals(35_000, SeasonCurve.dayTicks(CYCLE, .375, EQUINOX, SWING));
-        assertEquals(15_000, SeasonCurve.dayTicks(CYCLE, .875, EQUINOX, SWING));
+        assertEquals(EQUINOX, SeasonCurve.dayFraction(.125, EQUINOX, SWING), 1e-12);
+        assertEquals(EQUINOX + SWING, SeasonCurve.dayFraction(.375, EQUINOX, SWING), 1e-12);
+        assertEquals(EQUINOX, SeasonCurve.dayFraction(.625, EQUINOX, SWING), 1e-12);
+        assertEquals(SeasonCurve.MIN_DAY_FRACTION, SeasonCurve.dayFraction(.875, EQUINOX, SWING), 1e-12);
+        assertEquals(32_500, SeasonCurve.dayTicks(CYCLE, .125, EQUINOX, SWING));
+        assertEquals(37_222, SeasonCurve.dayTicks(CYCLE, .375, EQUINOX, SWING));
+        assertEquals(32_500, SeasonCurve.dayTicks(CYCLE, .625, EQUINOX, SWING));
+        assertEquals(27_778, SeasonCurve.dayTicks(CYCLE, .875, EQUINOX, SWING));
     }
 
     @Test
@@ -33,8 +34,9 @@ class SeasonCurveTest {
             double phase = (day + .5) / (12.0 * 64);
             double fraction = SeasonCurve.dayFraction(phase, EQUINOX, SWING);
             int daylight = SeasonCurve.dayTicks(CYCLE, phase, EQUINOX, SWING);
-            assertTrue(fraction >= .3 - 1e-12 && fraction <= .7 + 1e-12, "phase=" + phase);
-            assertTrue(daylight >= 15_000 && daylight <= 35_000, "phase=" + phase);
+            assertTrue(fraction >= SeasonCurve.MIN_DAY_FRACTION - 1e-12
+                    && fraction <= EQUINOX + SWING + 1e-12, "phase=" + phase);
+            assertTrue(daylight >= 27_778 && daylight <= 37_222, "phase=" + phase);
             assertEquals(CYCLE, daylight + (CYCLE - daylight), "no variable full-cycle length");
         }
     }
@@ -57,10 +59,26 @@ class SeasonCurveTest {
     }
 
     @Test
-    void zeroAmplitudeIsOrdinaryEquinoxPolicyNotAnExtraSeasonalMultiplier() {
+    void zeroAmplitudeKeepsAConstantDayAtOrAboveTheFloor() {
         for (double phase : new double[]{0, .125, .375, .625, .875, 1}) {
-            assertEquals(.5, SeasonCurve.dayFraction(phase, .5, 0), 1e-12);
-            assertEquals(25_000, SeasonCurve.dayTicks(CYCLE, phase, .5, 0));
+            assertEquals(EQUINOX, SeasonCurve.dayFraction(phase, EQUINOX, 0), 1e-12);
+            assertEquals(32_500, SeasonCurve.dayTicks(CYCLE, phase, EQUINOX, 0));
+            assertEquals(SeasonCurve.MIN_DAY_FRACTION, SeasonCurve.dayFraction(phase, .5, 0), 1e-12);
+            assertEquals(27_778, SeasonCurve.dayTicks(CYCLE, phase, .5, 0));
         }
+    }
+
+    @Test
+    void customValuesCannotShortenDayBelowTheUpwardRoundedFiveNinthsFloor() {
+        for (int cycle : new int[]{3, 9, 10, 50_000, 240_000}) {
+            int minimumDay = (int) ((5L * cycle + 8) / 9);
+            for (double phase : new double[]{.125, .375, .625, .875}) {
+                assertTrue(SeasonCurve.dayFraction(phase, .3, .2) >= SeasonCurve.MIN_DAY_FRACTION);
+                assertTrue(SeasonCurve.dayTicks(cycle, phase, .3, .2) >= minimumDay,
+                        "cycle=" + cycle + ", phase=" + phase);
+            }
+        }
+        assertTrue(SeasonCurve.dayFraction(.375, EQUINOX, SWING)
+                > SeasonCurve.dayFraction(.875, EQUINOX, SWING), "default must remain seasonal");
     }
 }
