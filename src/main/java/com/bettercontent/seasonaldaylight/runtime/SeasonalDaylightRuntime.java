@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-/** Called only at vanilla's attempted dayTime write, after gameTime/timers have advanced. */
+/** Called after a vanilla one-tick dayTime advance, after gameTime/timers have advanced. */
 public final class SeasonalDaylightRuntime {
     private SeasonalDaylightRuntime() {}
 
@@ -27,9 +27,8 @@ public final class SeasonalDaylightRuntime {
         // Before the first tick, the periodic phase packet will arrive in at most 20 ticks.
     }
 
-    public static long adjust(ServerLevel level, long vanillaNext) {
+    public static long adjust(ServerLevel level, long current, long vanillaNext) {
         if (level.dimension() != Level.OVERWORLD) return vanillaNext;
-        long current = level.getDayTime();
         if (vanillaNext != current + 1) return vanillaNext; // never override another clock owner
         int cycle = Math.toIntExact(SeasonalDaylightConfig.CYCLE_TICKS.get());
         ClockSavedData saved = ClockSavedData.of(level);
